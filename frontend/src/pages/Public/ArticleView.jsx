@@ -56,7 +56,7 @@ const ArticleView = () => {
 
         <div className="article-body">
           {article.content.split('\n').map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
+            <p key={`paragraph-${article._id}-${index}`}>{paragraph}</p>
           ))}
         </div>
       </article>

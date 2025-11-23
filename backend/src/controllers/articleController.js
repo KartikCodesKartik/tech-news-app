@@ -144,7 +144,7 @@ exports.updateArticle = async (req, res) => {
     if (excerpt) article.excerpt = excerpt;
     if (category) article.category = category;
     if (tags) article.tags = tags;
-    if (imageUrl) article.imageUrl = imageUrl;
+    if (imageUrl !== undefined) article.imageUrl = imageUrl;
     
     // Handle publication status change
     if (typeof isPublished !== 'undefined') {

@@ -74,7 +74,9 @@ const Home = () => {
                 <div className="article-content">
                   <span className="article-category">{article.category}</span>
                   <h3>{article.title}</h3>
-                  <p className="article-excerpt">{article.excerpt || article.content.substring(0, 150) + '...'}</p>
+                  <p className="article-excerpt">
+                    {article.excerpt || (article.content ? article.content.substring(0, 150) + '...' : 'No content available')}
+                  </p>
                   <div className="article-meta">
                     <span>By {article.author?.name}</span>
                     <span>{article.views} views</span>

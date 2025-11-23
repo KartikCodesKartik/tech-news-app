@@ -108,7 +108,7 @@ const ArticleList = () => {
                     <Link to={`/admin/articles/edit/${article._id}`} className="btn-icon">
                       ✏️
                     </Link>
-                    {(user?.role === 'admin' || article.author?._id === user?.id) && (
+                    {(user?.role === 'admin' || article.author?._id === user?._id) && (
                       <button
                         onClick={() => handleDelete(article._id)}
                         className="btn-icon danger"
