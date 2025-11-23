@@ -1,4 +1,10 @@
 const nodemailer = require('nodemailer');
+const {
+  welcomeEmail,
+  passwordResetEmail,
+  newsletterEmail,
+  notificationEmail
+} = require('../templates/emails');
 
 const transporter = nodemailer.createTransport({
   host: process.env.BREVO_SMTP_HOST,
@@ -30,36 +36,27 @@ const sendEmail = async (options) => {
 
 const sendWelcomeEmail = async (email, name) => {
   const subject = 'Welcome to Tech News App';
-  const html = `
-    <h1>Welcome ${name}!</h1>
-    <p>Your account has been created successfully.</p>
-    <p>You can now log in and start managing tech news articles.</p>
-    <p>Best regards,<br>Tech News Team</p>
-  `;
+  const html = welcomeEmail(name, email);
   await sendEmail({ to: email, subject, html });
 };
 
 const sendPasswordResetEmail = async (email, name, resetUrl) => {
   const subject = 'Password Reset Request';
-  const html = `
-    <h1>Hello ${name}</h1>
-    <p>You requested a password reset. Click the link below to reset your password:</p>
-    <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
-    <p>This link will expire in 1 hour.</p>
-    <p>If you didn't request this, please ignore this email.</p>
-    <p>Best regards,<br>Tech News Team</p>
-  `;
+  const html = passwordResetEmail(name, resetUrl);
   await sendEmail({ to: email, subject, html });
 };
 
-const sendNewsletterEmail = async (email, article) => {
+const sendNewsletterEmail = async (email, article, options = {}) => {
   const subject = `New Article: ${article.title}`;
-  const html = `
-    <h1>${article.title}</h1>
-    <p>${article.excerpt}</p>
-    <a href="${process.env.FRONTEND_URL}/article/${article._id}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Read More</a>
-    <p>Best regards,<br>Tech News Team</p>
-  `;
+  const html = newsletterEmail(article, {
+    unsubscribeUrl: options.unsubscribeUrl || `${process.env.FRONTEND_URL}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`
+  });
+  await sendEmail({ to: email, subject, html });
+};
+
+const sendNotificationEmail = async (email, notification, options = {}) => {
+  const subject = notification.subject || notification.title;
+  const html = notificationEmail(notification, options);
   await sendEmail({ to: email, subject, html });
 };
 
@@ -67,5 +64,6 @@ module.exports = {
   sendEmail,
   sendWelcomeEmail,
   sendPasswordResetEmail,
-  sendNewsletterEmail
+  sendNewsletterEmail,
+  sendNotificationEmail
 };
