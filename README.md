@@ -299,6 +299,22 @@ tech-news-app/
 - Input validation and sanitization
 - Secure password reset with time-limited tokens
 - HTTP-only cookies support
+- Rate limiting on all API endpoints to prevent abuse
+  - General API: 100 requests per 15 minutes
+  - Authentication endpoints: 5 attempts per 15 minutes
+  - Article creation: 10 articles per hour
+
+### Security Considerations for Production
+
+For production deployment, consider implementing:
+- **CSRF Protection**: Add CSRF tokens for cookie-based authentication
+- **HTTPS**: Use SSL/TLS certificates (required for secure cookies)
+- **Environment Security**: Store secrets in secure vaults (AWS Secrets Manager, Azure Key Vault, etc.)
+- **Database Security**: Enable MongoDB authentication and use encrypted connections
+- **Input Sanitization**: Add additional input sanitization middleware
+- **Security Headers**: Use helmet.js for setting security HTTP headers
+- **API Monitoring**: Implement logging and monitoring (e.g., with Winston, Morgan)
+- **Dependency Scanning**: Regularly run `npm audit` and update dependencies
 
 ## Development
 

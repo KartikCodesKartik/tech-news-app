@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/database');
 const errorHandler = require('./middleware/errorHandler');
+const { apiLimiter } = require('./middleware/rateLimiter');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -15,6 +16,9 @@ const newsletterRoutes = require('./routes/newsletterRoutes');
 connectDB();
 
 const app = express();
+
+// Apply rate limiting to all requests
+app.use(apiLimiter);
 
 // Middleware
 app.use(cors({
